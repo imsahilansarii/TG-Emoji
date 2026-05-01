@@ -75,17 +75,31 @@ ${formatted}
 
 // 🌐 INLINE MODE (IMPORTANT FEATURE)
 bot.on('inline_query', (query) => {
-    const results = [];
+    const text = query.query;
 
-    results.push({
-        type: 'article',
-        id: '1',
-        title: 'Paste Emoji ID',
-        description: 'Click to insert extracted IDs',
-        input_message_content: {
-            message_text: "👉 Paste your emoji ID here"
-        }
-    });
+    let results = [];
 
-    bot.answerInlineQuery(query.id, results);
+    if (!text) {
+        results.push({
+            type: 'article',
+            id: 'empty',
+            title: 'Send emoji to extract ID',
+            description: 'Type or paste premium emoji',
+            input_message_content: {
+                message_text: "👉 Send premium emoji to get ID"
+            }
+        });
+    } else {
+        results.push({
+            type: 'article',
+            id: 'result',
+            title: 'Paste your text',
+            description: text,
+            input_message_content: {
+                message_text: text
+            }
+        });
+    }
+
+    bot.answerInlineQuery(query.id, results, { cache_time: 0 });
 });
